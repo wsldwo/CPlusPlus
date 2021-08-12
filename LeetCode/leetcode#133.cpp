@@ -35,7 +35,7 @@ Node* cloneGraph(Node* node)
 				_ns[i] = new Node(i);//在堆上开内存
 			//要开始BFS了！！！
 			deque <Node*> q;
-			int visited[101] = {},enq[101] = {};//visited 记录是否访问   enq记录是否入队 
+			int enq[101] = {};//enq记录是否入队
 			q.push_back(node);
 			enq[1] = 1;
 			while(q.size() != 0)
@@ -51,26 +51,23 @@ Node* cloneGraph(Node* node)
 					Node* _n = q.front();
 					//cout << "cur_node: "<< _n -> val << endl;
 					q.pop_front();
-					if(!visited[_n -> val])
+
+					//cout << "neighbors:";
+					for(int j = 0; j < _n -> neighbors.size(); j++)
 					{
-						//cout << "neighbors:";
-						for(int j = 0; j < _n -> neighbors.size(); j++)
+						//cout << _n -> neighbors[j] -> val << "  ";
+						_ns[_n -> val] -> neighbors.push_back(_ns[_n -> neighbors[j] -> val]);//进行拷贝
+						if(!enq[_n -> neighbors[j] -> val])
 						{
-							//cout << _n -> neighbors[j] -> val << "  ";
-							_ns[_n -> val] -> neighbors.push_back(_ns[_n -> neighbors[j] -> val]);//进行拷贝
-							if(!enq[_n -> neighbors[j] -> val])
-							{
-								/*
-								这Bug找了一下午。。 
-								node -> neighbors[j] =============>> _n -> neighbors[j]
-								*/ 
-								q.push_back(_n -> neighbors[j]);//下一层节点入队
-								enq[_n -> neighbors[j] -> val] = 1;//已入队
-							}
+							/*
+							这Bug找了一下午。。
+							node -> neighbors[j] =============>> _n -> neighbors[j]
+							*/
+							q.push_back(_n -> neighbors[j]);//下一层节点入队
+							enq[_n -> neighbors[j] -> val] = 1;//已入队
 						}
-						//cout << endl;
-						visited[_n -> val] = 1;//已访问
 					}
+					//cout << endl;
 				}
 				//cout << endl;
 			}
